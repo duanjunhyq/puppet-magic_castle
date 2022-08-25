@@ -21,6 +21,10 @@ node default {
     include profile::singularity
   }
 
+  if 'bastion' in $instance_tags {
+    include profile::fail2ban
+  }
+
   if 'mgmt' in $instance_tags {
     include profile::freeipa::server
 
