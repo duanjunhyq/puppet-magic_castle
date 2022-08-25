@@ -21,10 +21,6 @@ node default {
     include profile::singularity
   }
 
-  if 'bastion' in $instance_tags {
-    include profile::fail2ban
-  }
-
   if 'mgmt' in $instance_tags {
     include profile::freeipa::server
 
@@ -59,7 +55,11 @@ node default {
 
   if 'nfs' in $instance_tags {
     include profile::nfs::server
-  } else {
+  } 
+  elsif 'bastion' in $instance_tags {
+    include profile::fail2ban
+  }
+  else {
     include profile::nfs::client
   }
 
