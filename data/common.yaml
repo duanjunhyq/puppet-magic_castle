@@ -75,10 +75,19 @@ squid::extra_config_sections:
     config_entries:
       maximum_object_size: "1310720 KB"
 
+profile::base::version: 12.0.0
+
 profile::squid::server::port: 3128
 profile::squid::server::cache_size: 10240
 
+<<<<<<< HEAD
 profile::cvmfs::client::quota_limit: 10240
+=======
+profile::cvmfs::client::quota_limit: 4096
+profile::cvmfs::local_user::group: 'cvmfs-reserved'
+profile::cvmfs::local_user::uid: 13000004
+profile::cvmfs::local_user::gid: 8000131
+>>>>>>> upstream/main
 
 profile::mfa::mgmt::provider: 'none'
 profile::mfa::node::provider: 'none'
@@ -87,23 +96,31 @@ profile::mfa::login::provider: 'none'
 profile::freeipa::mokey::port: 12345
 profile::freeipa::mokey::enable_user_signup: true
 profile::freeipa::mokey::require_verify_admin: true
+profile::freeipa::mokey::access_tags: "%{alias('profile::users::ldap::access_tags')}"
 
 profile::reverse_proxy::jupyterhub_subdomain: jupyter
 profile::reverse_proxy::ipa_subdomain: ipa
 profile::reverse_proxy::mokey_subdomain: mokey
 
 profile::slurm::base::slurm_version: '21.08'
+<<<<<<< HEAD
 profile::slurm::base::os_reserved_memory: 1024
+=======
+profile::slurm::base::os_reserved_memory: 512
+profile::slurm::controller::autoscale_version: '0.2.3'
+>>>>>>> upstream/main
 
 prometheus::storage_retention: '48h'
 prometheus::storage_retention_size: '5GB'
 
 profile::accounts::project_regex: '(ctb|def|rpp|rrg)-[a-z0-9_-]*'
+profile::users::ldap::access_tags: ['login:sshd', 'node:sshd', 'proxy:jupyterhub-login']
 profile::users::ldap::users:
   'user':
     count: "%{alias('terraform.data.nb_users')}"
     passwd: "%{alias('terraform.data.guest_passwd')}"
     groups: ['def-sponsor00']
+    manage_password: true
 
 profile::users::local::users:
   "%{alias('terraform.data.sudoer_username')}":
@@ -112,18 +129,15 @@ profile::users::local::users:
     sudoer: true
 
 
-profile::consul::acl_api_token: "%{alias('terraform.data.consul_token')}"
-
-profile::freeipa::base::admin_passwd: "%{alias('terraform.data.freeipa_passwd')}"
 profile::freeipa::base::domain_name: "%{alias('terraform.data.domain_name')}"
-profile::freeipa::mokey::passwd: "%{alias('terraform.data.freeipa_passwd')}"
 
 profile::slurm::base::cluster_name: "%{alias('terraform.data.cluster_name')}"
-profile::slurm::base::munge_key: "%{alias('terraform.data.munge_key')}"
-profile::slurm::accounting::password: "%{alias('terraform.data.freeipa_passwd')}"
 
 profile::freeipa::client::server_ip: "%{alias('terraform.tag_ip.mgmt.0')}"
 profile::consul::client::server_ip: "%{alias('terraform.tag_ip.puppet.0')}"
+
+profile::nfs::server::domain_name: "%{hiera('profile::freeipa::base::domain_name')}"
+profile::nfs::client::domain_name: "%{hiera('profile::freeipa::base::domain_name')}"
 profile::nfs::client::server_ip: "%{alias('terraform.tag_ip.nfs.0')}"
 
 profile::nfs::server::devices: "%{alias('terraform.volumes.nfs')}"

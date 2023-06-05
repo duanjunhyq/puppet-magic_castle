@@ -8,13 +8,13 @@ class profile::jupyterhub::hub {
   $mokey_hostname = "${mokey_subdomain}.${domain_name}"
 
   file { '/etc/jupyterhub/templates/login.html':
-    ensure  => present,
     content => epp('profile/jupyterhub/login.html', {
         'mokey_hostname'     => $mokey_hostname,
         'enable_user_signup' => $enable_user_signup,
       }
     ),
   }
+  include profile::slurm::submitter
 }
 
 class profile::jupyterhub::node {
