@@ -17,7 +17,7 @@ node default {
 
   if 'bastion' in $instance_tags {
     include profile::fail2ban
-    include profile::ssh::hostbased_auth::client
+    
   }
 
   if 'login' in $instance_tags {
@@ -63,7 +63,7 @@ node default {
     include profile::cvmfs::alien_cache
   } else {
 
-    unless 'basstion' in $instance_tags {
+    if 'basstion' not in $instance_tags {
       include profile::nfs::client
     }
     

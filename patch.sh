@@ -10,7 +10,5 @@ read access_key_id
 echo "Enter s3 bucket secret access key: "
 read secret_access_key
 
-echo "Hello, $name! You are $age years old."
-
 $ENC_CMD -l 'profile::s3fs::access_key_id' -s $access_key_id >>/etc/puppetlabs/code/environments/production/data/bootstrap.yaml
 $ENC_CMD -l 'profile::s3fs::secret_access_key' -s $secret_access_key >>/etc/puppetlabs/code/environments/production/data/bootstrap.yaml
