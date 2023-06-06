@@ -63,7 +63,9 @@ node default {
     include profile::cvmfs::alien_cache
   } else {
 
-    if 'basstion' not in $instance_tags {
+    if 'bastion' in $instance_tags {
+    }
+    else {
       include profile::nfs::client
     }
     
