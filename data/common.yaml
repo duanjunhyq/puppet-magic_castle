@@ -80,14 +80,10 @@ profile::base::version: 12.0.0
 profile::squid::server::port: 3128
 profile::squid::server::cache_size: 10240
 
-<<<<<<< HEAD
-profile::cvmfs::client::quota_limit: 10240
-=======
 profile::cvmfs::client::quota_limit: 4096
 profile::cvmfs::local_user::group: 'cvmfs-reserved'
 profile::cvmfs::local_user::uid: 13000004
 profile::cvmfs::local_user::gid: 8000131
->>>>>>> upstream/main
 
 profile::mfa::mgmt::provider: 'none'
 profile::mfa::node::provider: 'none'
@@ -103,12 +99,10 @@ profile::reverse_proxy::ipa_subdomain: ipa
 profile::reverse_proxy::mokey_subdomain: mokey
 
 profile::slurm::base::slurm_version: '21.08'
-<<<<<<< HEAD
-profile::slurm::base::os_reserved_memory: 1024
-=======
+
 profile::slurm::base::os_reserved_memory: 512
 profile::slurm::controller::autoscale_version: '0.2.3'
->>>>>>> upstream/main
+
 
 prometheus::storage_retention: '48h'
 prometheus::storage_retention_size: '5GB'

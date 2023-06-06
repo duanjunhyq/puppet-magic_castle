@@ -15,6 +15,11 @@ node default {
   include profile::metrics::exporter
   include profile::sssd::client
 
+  if 'bastion' in $instance_tags {
+    include profile::fail2ban
+    include profile::ssh::hostbased_auth::client
+  }
+
   if 'login' in $instance_tags {
     include profile::fail2ban
     include profile::cvmfs::client
@@ -55,17 +60,13 @@ node default {
 
   if 'nfs' in $instance_tags {
     include profile::nfs::server
-<<<<<<< HEAD
-  } 
-  elsif 'bastion' in $instance_tags {
-    include profile::fail2ban
-  }
-  else {
-=======
     include profile::cvmfs::alien_cache
   } else {
->>>>>>> upstream/main
-    include profile::nfs::client
+
+    unless 'basstion' in $instance_tags {
+      include profile::nfs::client
+    }
+    
   }
 
   if 'proxy' in $instance_tags {
