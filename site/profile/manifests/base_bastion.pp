@@ -1,4 +1,5 @@
 class profile::base_bastion (
+
   Optional[String] $admin_email = undef,
 ) {
   include stdlib
@@ -23,7 +24,7 @@ class profile::base_bastion (
     mode   => '0751',
   }
 
-  file { '/usr/sbin/prepare4image.sh':
+ file { '/usr/sbin/prepare4image.sh':
     source => 'puppet:///modules/profile/base/prepare4image.sh',
     mode   => '0755',
   }
@@ -67,7 +68,19 @@ class profile::base_bastion (
 
   # building /etc/ssh/ssh_known_hosts
   # for host based authentication
-
+  $type = 'ed25519'
+  $sshkey_to_add = Hash(
+    $instances.map |$k, $v| {
+      [
+        $k,
+        {
+          'key' => split($v['hostkeys'][$type], /\s/)[1],
+          'type' => "ssh-${type}",
+          'host_aliases' => ["${k}.${int_domain_name}", $v['local_ip'],]
+        }
+      ]
+  })
+  ensure_resources('sshkey', $sshkey_to_add)
 
   if dig($::facts, 'os', 'release', 'major') == '7' {
     package { 'yum-plugin-priorities':
@@ -92,7 +105,9 @@ class profile::base_bastion (
     }
   }
 
-
+  # Allow users to run TCP servers - activated to allow users
+  # to run mpi jobs.
+  selinux::boolean { 'selinuxuser_tcp_server': }
 
   file { '/etc/puppetlabs/puppet/csr_attributes.yaml':
     ensure => absent,
@@ -120,7 +135,27 @@ class profile::base_bastion (
     ensure => 'installed',
   }
 
- 
+  package { 'firewalld':
+    ensure => 'absent',
+  }
+
+  class { 'firewall': }
+
+  firewall { '001 accept all from local network':
+    chain  => 'INPUT',
+    proto  => 'all',
+    source => profile::getcidr(),
+    action => 'accept',
+  }
+
+  firewall { '001 drop access to metadata server':
+    chain       => 'OUTPUT',
+    proto       => 'tcp',
+    destination => '169.254.169.254',
+    action      => 'drop',
+    uid         => '! root',
+  }
+
   package { 'haveged':
     ensure  => 'installed',
     require => Yumrepo['epel'],
@@ -228,4 +263,3 @@ class profile::base_bastion (
     ensure => absent,
   }
 }
-
