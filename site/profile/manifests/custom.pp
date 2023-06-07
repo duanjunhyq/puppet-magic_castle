@@ -17,9 +17,16 @@ class profile::custom {
   }
   
 
-  file_line { 'add_object_starage':
-    path    => '/etc/fstab',
-    line => 'cidgohshare /mnt/cidgoh-object-storage fuse.s3fs _netdev,use_path_request_style,umask=0000,allow_other,passwd_file=/etc/passwd-s3fs,url=https://object-arbutus.cloud.computecanada.ca/ 0 0',
+  file_line { 'add_object_storage':
+    path   => '/etc/fstab',
+    line   => 'cidgohshare /mnt/cidgoh-object-storage fuse.s3fs _netdev,use_path_request_style,umask=0000,allow_other,passwd_file=/etc/passwd-s3fs,url=https://object-arbutus.cloud.computecanada.ca/ 0 0',
+    ensure => present,
+    notify => Exec['mount_fstab'],
+}
+
+  exec { 'mount_fstab':
+    command     => '/bin/mount -a',
+    refreshonly => true,
   }
 
 
