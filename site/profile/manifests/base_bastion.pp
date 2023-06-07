@@ -107,7 +107,7 @@ class profile::base (
 
   # Allow users to run TCP servers - activated to allow users
   # to run mpi jobs.
-  selinux::boolean { 'selinuxuser_tcp_server': }
+  # selinux::boolean { 'selinuxuser_tcp_server': }
 
   file { '/etc/puppetlabs/puppet/csr_attributes.yaml':
     ensure => absent,
@@ -148,13 +148,7 @@ class profile::base (
     action => 'accept',
   }
 
-  firewall { '001 drop access to metadata server':
-    chain       => 'OUTPUT',
-    proto       => 'tcp',
-    destination => '169.254.169.254',
-    action      => 'drop',
-    uid         => '! root',
-  }
+
 
   package { 'haveged':
     ensure  => 'installed',

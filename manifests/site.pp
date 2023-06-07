@@ -9,17 +9,25 @@ node default {
   } else {
     include profile::consul::client
   }
-
-  include profile::base
-  include profile::users::local
-  include profile::metrics::exporter
-  include profile::sssd::client
-
+  
   if 'bastion' in $instance_tags {
+    include profile::base_bastion
+    include profile::users::local    
+    include profile::metrics::exporter
+    include profile::sssd::client
     include profile::fail2ban
     
   }
+  else {
+    include profile::base
+    include profile::users::local
+    include profile::metrics::exporter
+    include profile::sssd::client
+  }
 
+  
+
+  
   if 'login' in $instance_tags {
     include profile::fail2ban
     include profile::cvmfs::client
