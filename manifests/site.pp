@@ -12,7 +12,7 @@ node default {
   
   if 'bastion' in $instance_tags {
     include profile::base_bastion
-    include profile::users::local    
+    include profile::users::local
     include profile::metrics::exporter
     include profile::sssd::client
     include profile::fail2ban

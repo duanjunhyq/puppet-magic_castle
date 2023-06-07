@@ -1,5 +1,4 @@
-class profile::base (
-  String $version,
+class profile::base_bastion (
   Optional[String] $admin_email = undef,
 ) {
   include stdlib
@@ -15,7 +14,7 @@ class profile::base (
   $ipaddress = $facts['networking']['interfaces'][$interface]['ip']
 
   file { '/etc/magic-castle-release':
-    content => "Magic Castle release ${version}",
+    content => "Magic Castle release 12.0.0",
   }
 
   # Ensure consul can read the state of agent_catalog_run.lock
@@ -68,19 +67,7 @@ class profile::base (
 
   # building /etc/ssh/ssh_known_hosts
   # for host based authentication
-  $type = 'ed25519'
-  $sshkey_to_add = Hash(
-    $instances.map |$k, $v| {
-      [
-        $k,
-        {
-          'key' => split($v['hostkeys'][$type], /\s/)[1],
-          'type' => "ssh-${type}",
-          'host_aliases' => ["${k}.${int_domain_name}", $v['local_ip'],]
-        }
-      ]
-  })
-  ensure_resources('sshkey', $sshkey_to_add)
+
 
   if dig($::facts, 'os', 'release', 'major') == '7' {
     package { 'yum-plugin-priorities':
@@ -105,9 +92,7 @@ class profile::base (
     }
   }
 
-  # Allow users to run TCP servers - activated to allow users
-  # to run mpi jobs.
-  # selinux::boolean { 'selinuxuser_tcp_server': }
+
 
   file { '/etc/puppetlabs/puppet/csr_attributes.yaml':
     ensure => absent,
@@ -135,21 +120,7 @@ class profile::base (
     ensure => 'installed',
   }
 
-  package { 'firewalld':
-    ensure => 'absent',
-  }
-
-  class { 'firewall': }
-
-  firewall { '001 accept all from local network':
-    chain  => 'INPUT',
-    proto  => 'all',
-    source => profile::getcidr(),
-    action => 'accept',
-  }
-
-
-
+ 
   package { 'haveged':
     ensure  => 'installed',
     require => Yumrepo['epel'],
@@ -258,24 +229,3 @@ class profile::base (
   }
 }
 
-class profile::base::azure {
-  package { 'WALinuxAgent':
-    ensure => purged,
-  }
-
-  file { '/etc/udev/rules.d/66-azure-storage.rules':
-    source         => 'https://raw.githubusercontent.com/Azure/WALinuxAgent/v2.2.48.1/config/66-azure-storage.rules',
-    require        => Package['WALinuxAgent'],
-    owner          => 'root',
-    group          => 'root',
-    mode           => '0644',
-    checksum       => 'md5',
-    checksum_value => '51e26bfa04737fc1e1f14cbc8aeebece',
-  }
-
-  exec { 'udevadm trigger --action=change':
-    refreshonly => true,
-    subscribe   => File['/etc/udev/rules.d/66-azure-storage.rules'],
-    path        => ['/usr/bin'],
-  }
-}
