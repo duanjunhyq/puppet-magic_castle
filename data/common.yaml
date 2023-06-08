@@ -69,7 +69,7 @@ jupyterhub::jupyterhub_config_hash:
 selinux::mode: 'permissive'
 # selinux::type: 'targeted'
 
-squid::cache_mem: "2560 MB"
+squid::cache_mem: "4096 MB"
 squid::extra_config_sections:
   general:
     config_entries:
@@ -80,7 +80,7 @@ profile::base::version: 12.0.0
 profile::squid::server::port: 3128
 profile::squid::server::cache_size: 10240
 
-profile::cvmfs::client::quota_limit: 4096
+profile::cvmfs::client::quota_limit: 10240
 profile::cvmfs::local_user::group: 'cvmfs-reserved'
 profile::cvmfs::local_user::uid: 13000004
 profile::cvmfs::local_user::gid: 8000131
@@ -100,7 +100,7 @@ profile::reverse_proxy::mokey_subdomain: mokey
 
 profile::slurm::base::slurm_version: '21.08'
 
-profile::slurm::base::os_reserved_memory: 512
+profile::slurm::base::os_reserved_memory: 2048
 profile::slurm::controller::autoscale_version: '0.2.3'
 
 
