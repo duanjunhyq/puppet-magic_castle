@@ -67,3 +67,5 @@ magic_castle::site::tags:
   puppet:
     - profile::puppetserver
     - profile::swap
+  bastion:
+    - profile::fail2ban
