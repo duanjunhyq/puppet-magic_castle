@@ -69,3 +69,4 @@ magic_castle::site::tags:
     - profile::swap
   bastion:
     - profile::fail2ban
+    - profile::mkhomedir
