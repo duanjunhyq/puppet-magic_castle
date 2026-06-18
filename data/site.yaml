@@ -70,3 +70,4 @@ magic_castle::site::tags:
   bastion:
     - profile::fail2ban
     - profile::mkhomedir
+    - profile::freeipa::client
