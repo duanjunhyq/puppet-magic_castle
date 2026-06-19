@@ -1,0 +1,7 @@
+---
+globus::display_name: "CIDOGH Eagle DTN 2026_6"
+globus::client_id: "524027f7-df08-4396-86b1-c0e567a8f0b3"
+globus::client_secret: "hZVSsJGRDNEB70RkYmgR8G+7uhdXdThYKpmNKqjSRKA="
+globus::contact_email: "duanjun1981@gmail.com"
+globus::organization: "CIDGOH at SFU"
+globus::owner: "duanjun1981@gmail.com"
